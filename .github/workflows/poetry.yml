@@ -9,53 +9,36 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: node:18
-      volumes:
-        - my_docker_volume:/volume_mount
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
       - uses: abatilo/actions-poetry@v2
-      - name: Install deps
-        run: poetry install
+      - run: poetry install
 
   format:
     runs-on: ubuntu-latest
-    container:
-      image: node:18
-      volumes:
-        - my_docker_volume:/volume_mount
     needs: build
     steps:
+      - uses: actions/checkout@v3
       - run: poetry run ruff format .
 
   lint:
     runs-on: ubuntu-latest
-    container:
-      image: node:18
-      volumes:
-        - my_docker_volume:/volume_mount
     needs: build
     steps:
+      - uses: actions/checkout@v3
       - run: poetry run ruff check --fix .
 
   typecheck:
     runs-on: ubuntu-latest
-    container:
-      image: node:18
-      volumes:
-        - my_docker_volume:/volume_mount
     needs: build
     steps:
+      - uses: actions/checkout@v3
       - run: poetry run pyright .
 
   test:
     runs-on: ubuntu-latest
-    container:
-      image: node:18
-      volumes:
-        - my_docker_volume:/volume_mount
     needs: build
     steps:
+      - uses: actions/checkout@v3
       - run: poetry run pytest
