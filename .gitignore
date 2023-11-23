@@ -1,5 +1,6 @@
 ##### CUSTOM #######
 .secret-key
+.ruff_cache
 
 ##### COPIED #######
 # Byte-compiled / optimized / DLL files
