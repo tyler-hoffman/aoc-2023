@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "aoc-2023"
+version = "0.1.0"
+description = ""
+authors = ["Tyler Hoffman <tyler.hoffman@greatexpectations.io>"]
+readme = "README.md"
+packages = [{include = "aoc_2023"}]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[tool.poetry.group.dev.dependencies]
+pyright = "^1.1.337"
+pytest = "^7.4.3"
+ruff = "^0.1.6"
+advent-of-code-data = "^2.0.1"
+pre-commit = "^3.5.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
