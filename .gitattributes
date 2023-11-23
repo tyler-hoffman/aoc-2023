@@ -1,0 +1,2 @@
+**/input.txt filter=git-crypt diff=git-crypt
+**/from_prompt.py filter=git-crypt diff=git-crypt
