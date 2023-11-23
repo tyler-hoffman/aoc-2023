@@ -1,4 +1,5 @@
 name: Setup python
+description: "Sets up python"
 
 runs:
   using: "composite"
