@@ -1,6 +1,8 @@
 ===================
 advent of code 2023
 ===================
+.. image:: https://github.com/tyler-hoffman/aoc-2023/actions/workflows/poetry.yml/badge.svg
+
 Python 3.12 edition
 
 Notes on the repo
