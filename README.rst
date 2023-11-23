@@ -52,7 +52,7 @@ Handy Links
 ===========
 
 * `AoC <https://adventofcode.com/2023>`_
-* `Repo <https://github.com/tyler-hoffman/aoc-2023`_
+* `Repo <https://github.com/tyler-hoffman/aoc-2023>`_
 
 About those input.txt files...
 ==============================
