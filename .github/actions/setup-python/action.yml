@@ -1,0 +1,19 @@
+name: Setup python
+description: "Sets up python"
+
+runs:
+  using: "composite"
+  steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - uses: abatilo/actions-poetry@v2
+      - run: sudo apt-get update
+        shell: bash
+      - run: sudo apt-get install git-crypt
+        shell: bash
+      - run: echo "$GIT_CRYPT_KEY" | base64 -d > ./git-crypt.key
+        shell: bash
+      - run: git-crypt unlock ./git-crypt.key
+        shell: bash
+      - run: poetry install
+        shell: bash
