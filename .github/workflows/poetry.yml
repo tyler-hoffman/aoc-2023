@@ -43,8 +43,9 @@ jobs:
 
       - run: sudo apt-get update
       - run: sudo apt-get install git-crypt
-      - run: echo "$GIT_CRYPT_KEY" | base64 -d > ~/git-crypt.key
-      - run: cat ~/git-crypt.key
+      - run: echo "$GIT_CRYPT_KEY" | base64 -d > ./git-crypt.key
+      - run: cat ./git-crypt.key
+      - run: cat ./git-crypt.keys
       - run: git-crypt unlock ~/git-crypt.key
 
       - run: poetry install
