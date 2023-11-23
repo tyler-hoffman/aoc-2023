@@ -20,22 +20,22 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: poetry run ruff format .
+      - run: poetry run ruff format .
 
   lint:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: poetry run ruff check --fix .
+      - run: poetry run ruff check --fix .
 
   typecheck:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: poetry run pyright .
+      - run: poetry run pyright .
 
   test:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: poetry run pytest
+      - run: poetry run pytest
