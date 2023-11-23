@@ -3,7 +3,7 @@ name = "aoc-2023"
 version = "0.1.0"
 description = ""
 authors = ["Tyler Hoffman <tyler.hoffman@greatexpectations.io>"]
-readme = "README.md"
+readme = "README.rst"
 packages = [{include = "aoc_2023"}]
 
 [tool.poetry.dependencies]

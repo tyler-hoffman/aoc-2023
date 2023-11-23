@@ -1,0 +1,41 @@
+name: Poetry CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - uses: abatilo/actions-poetry@v2
+      - name: Install deps
+        run: poetry install
+
+  format:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: poetry run ruff format .
+
+  lint:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: poetry run ruff check --fix .
+
+  typecheck:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: poetry run pyright .
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: poetry run pytest
