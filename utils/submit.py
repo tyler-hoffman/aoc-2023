@@ -14,6 +14,7 @@ def submit(day: int, part: Part) -> None:
     answer = completed_process.stdout.decode("utf-8").strip()
 
     print(f"Submitting answer: {answer}")
+    assert not isinstance(aocd.submit, str)
     aocd.submit(day=day, part=part, year=2023, answer=answer)
 
 
