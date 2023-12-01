@@ -57,7 +57,7 @@ Handy Links
 * `AoC <https://adventofcode.com/2023>`_
 * `Repo <https://github.com/tyler-hoffman/aoc-2023>`_
 
-About those input.txt files...
-==============================
-I'm encrypting input files to respect `Eric's wishes <https://mobile.twitter.com/ericwastl/status/1465805354214830081>`_.
+About those ``input.txt`` and ``from_prompt.py`` files...
+=========================================================
+I'm encrypting data/text from the site to respect `Eric's wishes <https://mobile.twitter.com/ericwastl/status/1465805354214830081>`_.
 To do so, I'm using `git-crypt <https://github.com/AGWA/git-crypt>`_ with symmetric encryption. My key is stored locally, and for CI, I'm adding a base64 encoded string of the file as an environment variable. That gets decrypted and written to disk in CI so that it can run tests against my actual input. Like some other parts of this repo, this may make things hard if you are not me.
