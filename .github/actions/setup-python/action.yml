@@ -1,12 +1,19 @@
 name: Setup python
-description: "Sets up python"
+description: "Common setup for installing dependencies"
 
 runs:
   using: "composite"
   steps:
       - uses: actions/checkout@v3
+      - name: Install poetry
+        run: pipx install poetry
+        shell: bash
       - uses: actions/setup-python@v4
-      - uses: abatilo/actions-poetry@v2
+        with:
+          python-version: 3.12
+          cache: 'poetry'
+      - run: poetry install
+        shell: bash
       - run: sudo apt-get update
         shell: bash
       - run: sudo apt-get install git-crypt
@@ -14,6 +21,4 @@ runs:
       - run: echo "$GIT_CRYPT_KEY" | base64 -d > ./git-crypt.key
         shell: bash
       - run: git-crypt unlock ./git-crypt.key
-        shell: bash
-      - run: poetry install
         shell: bash
