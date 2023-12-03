@@ -5,7 +5,7 @@ from functools import cached_property
 
 @dataclass(frozen=True)
 class Value:
-    value: int
+    value: str
     line_number: int
     start: int
     end: int
@@ -57,6 +57,10 @@ class Analyzer:
     def numbers(self) -> set[Value]:
         return self.get_values(self.number_regex)
 
+    @cached_property
+    def stars(self) -> set[Value]:
+        return self.get_values(self.star_regex)
+
     def get_values(self, pattern: re.Pattern) -> set[Value]:
         output = set[Value]()
 
@@ -64,7 +68,7 @@ class Analyzer:
             for m in pattern.finditer(line):
                 output.add(
                     Value(
-                        value=int(m.group(0)),
+                        value=m.group(0),
                         start=m.start(),
                         end=m.end(),
                         line_number=i,
@@ -76,6 +80,10 @@ class Analyzer:
     @cached_property
     def number_regex(self) -> re.Pattern:
         return re.compile(r"(\d+)")
+
+    @cached_property
+    def star_regex(self) -> re.Pattern:
+        return re.compile(r"\*")
 
     @cached_property
     def symbol_regex(self) -> re.Pattern:

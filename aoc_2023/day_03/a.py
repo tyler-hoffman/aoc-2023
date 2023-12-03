@@ -11,7 +11,7 @@ class Day03PartASolver:
 
     @property
     def solution(self) -> int:
-        return sum(v.value for v in self.analyzer.part_numbers)
+        return sum(int(v.value) for v in self.analyzer.part_numbers)
 
     @cached_property
     def analyzer(self) -> Analyzer:
