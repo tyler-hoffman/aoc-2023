@@ -1,7 +1,7 @@
 import re
 from dataclasses import dataclass
 from functools import cached_property
-from aoc_2023.day_03.common import Value
+from aoc_2023.day_03.common import Analyzer, Value
 from aoc_2023.day_03.parser import Parser
 
 
@@ -75,6 +75,10 @@ class Day03PartBSolver:
                 )
 
         return output
+
+    @cached_property
+    def analyzer(self) -> Analyzer:
+        return Analyzer(self.lines)
 
     @cached_property
     def stars(self) -> set[Value]:
