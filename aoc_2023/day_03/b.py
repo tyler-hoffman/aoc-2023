@@ -10,28 +10,26 @@ class Day03PartBSolver:
 
     @property
     def solution(self) -> int:
-        star_to_part_numbers: dict[Value, set[Value]] = {
-            star: set() for star in self.analyzer.stars
-        }
-        for star in self.analyzer.stars:
-            for number in self.analyzer.part_numbers:
-                if all(
-                    [
-                        abs(star.line_number - number.line_number) <= 1,
-                        star.start >= number.start - 1,
-                        star.start <= number.end,
-                    ]
-                ):
-                    star_to_part_numbers[star].add(number)
-
         gears = {
             star: list(part_numbers)
-            for star, part_numbers in star_to_part_numbers.items()
+            for star, part_numbers in self.stars_to_part_numbers.items()
             if len(part_numbers) == 2
         }
 
         products = [int(pn[0].value) * int(pn[1].value) for pn in gears.values()]
         return sum(products)
+
+    @cached_property
+    def stars_to_part_numbers(self) -> dict[Value, set[Value]]:
+        star_to_part_numbers: dict[Value, set[Value]] = {
+            star: set() for star in self.analyzer.stars
+        }
+        for star in self.analyzer.stars:
+            for number in self.analyzer.part_numbers:
+                bounds = self.analyzer.bounding_box(number)
+                if bounds.contains(star.start, star.line_number):
+                    star_to_part_numbers[star].add(number)
+        return star_to_part_numbers
 
     @cached_property
     def analyzer(self) -> Analyzer:

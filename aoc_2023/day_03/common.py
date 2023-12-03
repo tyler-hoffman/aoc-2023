@@ -18,6 +18,16 @@ class Bounds:
     y1: int
     y2: int
 
+    def contains(self, x: int, y: int) -> bool:
+        return all(
+            [
+                x >= self.x1,
+                x < self.x2,
+                y >= self.y1,
+                y < self.y2,
+            ]
+        )
+
 
 @dataclass
 class Analyzer:
@@ -36,10 +46,7 @@ class Analyzer:
         output = set[Value]()
         for value in self.numbers:
             box = self.bounding_box(value)
-            bounds = [
-                self.lines[y][box.x1 : box.x2]
-                for y in range(box.y1, min(self.height, box.y2 + 1))
-            ]
+            bounds = [self.lines[y][box.x1 : box.x2] for y in range(box.y1, box.y2)]
             chars = "".join(bounds)
             if self.symbol_regex.search(chars) is not None:
                 output.add(value)
@@ -49,7 +56,7 @@ class Analyzer:
         x1 = max(0, value.start - 1)
         x2 = min(self.width, value.end + 1)
         y1 = max(0, value.line_number - 1)
-        y2 = min(self.height, value.line_number + 1)
+        y2 = min(self.height, value.line_number + 2)
 
         return Bounds(x1=x1, x2=x2, y1=y1, y2=y2)
 
