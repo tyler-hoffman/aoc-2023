@@ -1,7 +1,7 @@
 import re
 from dataclasses import dataclass
 from functools import cached_property
-from aoc_2023.common import Value
+from aoc_2023.day_03.common import Value
 from aoc_2023.day_03.parser import Parser
 
 
