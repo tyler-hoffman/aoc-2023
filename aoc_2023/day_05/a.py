@@ -14,7 +14,7 @@ class Day05PartASolver:
     def get_seed_location(self, seed: int) -> int:
         value = seed
         for mapping_set in self.data.mapping_sets:
-            value = mapping_set.map(value)
+            value = mapping_set.map_value(value)
         return value
 
 
