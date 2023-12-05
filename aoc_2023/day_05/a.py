@@ -9,7 +9,13 @@ class Day05PartASolver:
 
     @property
     def solution(self) -> int:
-        return -1
+        return min(self.get_seed_location(seed) for seed in self.data.seeds)
+
+    def get_seed_location(self, seed: int) -> int:
+        value = seed
+        for mapping_set in self.data.mapping_sets:
+            value = mapping_set.map(value)
+        return value
 
 
 def solve(input: str) -> int:
