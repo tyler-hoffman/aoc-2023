@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from math import prod
 from aoc_2023.day_06.common import Race
 from aoc_2023.day_06.parser import Parser
 
@@ -9,7 +10,19 @@ class Day06PartASolver:
 
     @property
     def solution(self) -> int:
-        return -1
+        solutions_per_race = [self.solutions_for_race(r) for r in self.races]
+        return prod(len(s) for s in solutions_per_race)
+
+    def solutions_for_race(self, race: Race) -> set[int]:
+        hold_times = set[int]()
+        for t in range(race.time + 1):
+            speed = t
+            boat_time = race.time - t
+            dist = boat_time * speed
+            if dist > race.distance:
+                hold_times.add(t)
+
+        return hold_times
 
 
 def solve(input: str) -> int:
