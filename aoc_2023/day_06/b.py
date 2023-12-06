@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from functools import cached_property
-from aoc_2023.day_06.common import Race
+from aoc_2023.day_06.common import Race, solutions_for_race
 from aoc_2023.day_06.parser import Parser
 
 
@@ -10,18 +10,7 @@ class Day06PartBSolver:
 
     @property
     def solution(self) -> int:
-        return len(self.solutions_for_race(self.big_race))
-
-    def solutions_for_race(self, race: Race) -> set[int]:
-        hold_times = set[int]()
-        for t in range(race.time + 1):
-            speed = t
-            boat_time = race.time - t
-            dist = boat_time * speed
-            if dist > race.distance:
-                hold_times.add(t)
-
-        return hold_times
+        return solutions_for_race(self.big_race)
 
     @cached_property
     def big_race(self) -> Race:
