@@ -1,15 +1,17 @@
 from dataclasses import dataclass
-from aoc_2023.day_04.common import Card
+from aoc_2023.day_07.common import Hand
 from aoc_2023.day_07.parser import Parser
 
 
 @dataclass
 class Day07PartASolver:
-    hands: list[Card]
+    hands: list[Hand]
 
     @property
     def solution(self) -> int:
-        return -1
+        sorted_hands = sorted(self.hands)
+        pairs = [(hand.bid, i + 1) for i, hand in enumerate(sorted_hands)]
+        return sum(a * b for a, b in pairs)
 
 
 def solve(input: str) -> int:
