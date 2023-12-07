@@ -1,32 +1,20 @@
 from dataclasses import dataclass
-from functools import cache
-from aoc_2023.day_07.common import CARD_FACE_TO_VALUE_JOKER_EDITION, Hand, HandType
+from functools import cached_property
+from aoc_2023.day_07.common import (
+    CARD_FACE_TO_VALUE_JOKER_EDITION,
+    Game,
+    Hand,
+    HandType,
+)
 from aoc_2023.day_07.parser import Parser
 from aoc_2023.tools.freq_map import frequency_map
 
 
-@dataclass(frozen=True)
-class Day07PartBSolver:
-    hands: tuple[Hand, ...]
+class PartBGame(Game):
+    @cached_property
+    def card_face_to_value(self) -> dict[str, int]:
+        return CARD_FACE_TO_VALUE_JOKER_EDITION
 
-    @property
-    def solution(self) -> int:
-        sorted_hands = sorted(
-            self.hands, key=lambda hand: self.hand_type_and_values(hand)
-        )
-        pairs = [(hand.bid, i + 1) for i, hand in enumerate(sorted_hands)]
-        return sum(a * b for a, b in pairs)
-
-    @cache
-    def hand_type_and_values(self, hand: Hand) -> tuple[int, ...]:
-        return tuple(
-            [
-                self.hand_type(hand).value,
-                *[CARD_FACE_TO_VALUE_JOKER_EDITION[c] for c in hand.card_string],
-            ]
-        )
-
-    @cache
     def hand_type(self, hand: Hand) -> HandType:
         non_jokers = [c for c in hand.card_string if c != "J"]
         joker_count = len(hand.card_string) - len(non_jokers)
@@ -35,20 +23,21 @@ class Day07PartBSolver:
             matches[0] += joker_count
         if joker_count == len(hand.card_string):
             return HandType.FIVE_OF_A_KIND
-        elif matches[0] == 5:
-            return HandType.FIVE_OF_A_KIND
-        elif matches[0] == 4:
-            return HandType.FOUR_OF_A_KIND
-        elif matches[0] == 3 and matches[1] == 2:
-            return HandType.FULL_HOUSE
-        elif matches[0] == 3:
-            return HandType.THREE_OF_A_KIND
-        elif matches[0] == 2 and matches[1] == 2:
-            return HandType.TWO_PAIR
-        elif matches[0] == 2:
-            return HandType.ONE_PAIR
         else:
-            return HandType.HIGH_CARD
+            freqs = frequency_map(non_jokers)
+            max_count = max(freqs.values())
+            max_card = next(c for c, count in freqs.items() if count == max_count)
+            freqs[max_card] += joker_count
+            return self.hand_type_for_card_frequency(freqs)
+
+
+@dataclass(frozen=True)
+class Day07PartBSolver:
+    hands: tuple[Hand, ...]
+
+    @property
+    def solution(self) -> int:
+        return PartBGame(self.hands).score
 
 
 def solve(input: str) -> int:
