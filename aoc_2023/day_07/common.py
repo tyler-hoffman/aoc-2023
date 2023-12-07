@@ -9,6 +9,10 @@ from aoc_2023.tools.freq_map import frequency_map
 CARD_FACES = [str(x) for x in ["A", "K", "Q", "J", "T", 9, 8, 7, 6, 5, 4, 3, 2]]
 CARD_FACE_TO_VALUE = {c: i + 2 for i, c in enumerate(reversed(CARD_FACES))}
 
+CARD_FACE_TO_VALUE = {
+    c: 1 if c == "J" else i + 2 for i, c in enumerate(reversed(CARD_FACES))
+}
+
 
 class HandType(Enum):
     HIGH_CARD = 0
@@ -41,8 +45,14 @@ class Hand:
 
     @cached_property
     def type(self) -> HandType:
-        matches = sorted(self.card_freqs.values(), reverse=True)
-        if matches[0] == 5:
+        non_jokers = [c for c in self.card_string if c != "J"]
+        joker_count = len(self.card_string) - len(non_jokers)
+        matches = sorted(frequency_map(non_jokers).values(), reverse=True)
+        if matches:
+            matches[0] += joker_count
+        if joker_count == len(self.card_string):
+            return HandType.FIVE_OF_A_KIND
+        elif matches[0] == 5:
             return HandType.FIVE_OF_A_KIND
         elif matches[0] == 4:
             return HandType.FOUR_OF_A_KIND

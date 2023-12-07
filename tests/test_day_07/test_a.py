@@ -1,7 +1,7 @@
 import pytest
 from aoc_2023.day_07.a import get_solution, solve
 from aoc_2023.day_07.common import Hand
-from aoc_2023.day_07.from_prompt import SAMPLE_DATA, SAMPLE_SOLUTION
+from aoc_2023.day_07.from_prompt import SAMPLE_DATA, SAMPLE_SOLUTION_A
 
 
 @pytest.mark.parametrize(
@@ -16,7 +16,7 @@ def test_compare(smaller: Hand, larger: Hand):
 
 
 def test_solve():
-    assert solve(SAMPLE_DATA) == SAMPLE_SOLUTION
+    assert solve(SAMPLE_DATA) == SAMPLE_SOLUTION_A
 
 
 def test_my_solution():
