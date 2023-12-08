@@ -1,12 +1,12 @@
-import math
-from dataclasses import dataclass
-from functools import cached_property
+from dataclasses import dataclass, field
+from functools import cache, cached_property
 from typing import Mapping
 from aoc_2023.day_08.common import Data, Node
 from aoc_2023.day_08.parser import Parser
+from aoc_2023.tools.factors import smallest_product_of_all_factors
 
 
-@dataclass
+@dataclass(frozen=True)
 class CycleData:
     cycle_start: int
     cycle_length: int
@@ -21,9 +21,9 @@ class CycleData:
             return dist_in_cycle in self.in_cycle_z_dists
 
 
-@dataclass
+@dataclass(frozen=True)
 class Day08PartBSolver:
-    data: Data
+    data: Data = field(hash=False)
 
     @property
     def solution(self) -> int:
@@ -42,12 +42,17 @@ class Day08PartBSolver:
             for delta in leader.in_cycle_z_dists:
                 new_dist = dist + delta
                 matches = tuple([c for c in cycle_datas if c.is_z(new_dist)])
-                jump_size = math.prod([c.cycle_length for c in matches])
+                jump_size = self.compute_jump_size(matches)
+                _ = self.compute_jump_size(matches)
                 if len(matches) == len(cycle_datas):
                     return new_dist
             dist += jump_size
 
         assert False
+
+    @cache
+    def compute_jump_size(self, cycle_datas: tuple[CycleData, ...]) -> int:
+        return smallest_product_of_all_factors([c.cycle_length for c in cycle_datas])
 
     @cached_property
     def nodes_by_name(self) -> Mapping[str, Node]:

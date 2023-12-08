@@ -7,6 +7,4 @@ def test_solve():
 
 
 def test_my_solution():
-    assert get_solution() < 106436333295260362798271
-    assert get_solution() < 106436333295260362798271
-    assert get_solution() == "NOT THIS"
+    assert get_solution() == 21083806112641
