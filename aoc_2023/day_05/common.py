@@ -9,7 +9,7 @@ class Range:
 
     def __post_init__(self) -> None:
         if not self.end > self.start:
-            print(self)
+            assert False
 
     def shift(self, amt: int) -> Range:
         return Range(self.start + amt, self.end + amt)
