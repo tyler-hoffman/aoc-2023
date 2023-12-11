@@ -17,6 +17,9 @@ class Point:
     def add(self, other: Point) -> Point:
         return Point(self.x + other.x, self.y + other.y)
 
+    def dist(self, other: Point) -> int:
+        return abs(self.x - other.x) + abs(self.y - other.y)
+
     @property
     def neighbors(self) -> set[Point]:
         return {
