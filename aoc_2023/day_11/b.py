@@ -1,10 +1,16 @@
+from dataclasses import dataclass
 from aoc_2023.day_11.common import Day11Solver
 from aoc_2023.day_11.parser import Parser
 
 
+@dataclass
+class Day11PartBSolver:
+    input: str
+
+
 def solve(input: str) -> int:
     data = Parser.parse(input)
-    solver = Day11Solver(data, 2)
+    solver = Day11Solver(data, 1000000)
 
     return solver.solution
 
