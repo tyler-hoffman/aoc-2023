@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Iterator
+from typing import Iterator, Optional
 from aoc_2023.day_12.common import Record
 from aoc_2023.day_12.parser import Parser
 
@@ -17,10 +17,17 @@ class Day12PartASolver:
 
     @staticmethod
     def is_valid_sequence(seq: list[str], record: Record) -> bool:
+        return Day12PartASolver.get_congruencies(seq) == record.congruencies
+
+    @staticmethod
+    def get_congruencies(seq: list[str], length: Optional[int] = None) -> list[int]:
+        end = length if length is not None else len(seq)
         congruencies = list[int]()
         count = 0
         prev = "."
-        for ch in seq:
+        for i, ch in enumerate(seq):
+            if i >= end:
+                break
             if ch == "." and prev == "#":
                 if count:
                     congruencies.append(count)
@@ -30,11 +37,14 @@ class Day12PartASolver:
             prev = ch
         if count:
             congruencies.append(count)
-        return congruencies == record.congruencies
+        return congruencies
 
     def get_variations(
         self, chars: list[str], record: Record, index: int = 0
     ) -> Iterator[list[str]]:
+        congruencies = self.get_congruencies(chars[:index])
+        if congruencies[:-1] != record.congruencies[: len(congruencies)][:-1]:
+            return
         if index == len(chars):
             if self.is_valid_sequence(chars, record):
                 yield chars[:]
