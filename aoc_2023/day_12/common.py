@@ -62,7 +62,7 @@ class RecordSolver:
                 assert False
 
     def congruency_matches(self, chars: str, congruency: int) -> int:
-        groups = period_pattern.split(chars)
+        groups = [g for g in period_pattern.split(chars) if g]
         with_hashes = [g for g in groups if "#" in groups]
         match len(with_hashes):
             case 0:
@@ -100,10 +100,17 @@ class RecordSolver:
             congruency = congruencies[i]
             for to_the_left in range(congruency):
                 to_the_right = congruency - to_the_left
-                output += self.solve_it(
-                    chars[: mid - to_the_left], congruencies[:i]
-                ) * self.solve_it(chars[mid + to_the_right :], congruencies[i + 1 :])
-        return output
+                left = mid - to_the_left
+                right = mid + to_the_right
+                if left >= 0 and right < len(chars):
+                    if "." in chars[left:right]:
+                        continue
+                    if left > 0 and chars[left - 1] == "#":
+                        continue
+                    if right < len(chars) and chars[right] == "#":
+                        continue
 
-    def remove_surrounding_periods(self, string: str) -> str:
-        return string.replace(".", " ").strip().replace(" ", ".")
+                output += self.solve_it(
+                    chars[: max(0, left - 1)], congruencies[:i]
+                ) * self.solve_it(chars[right + 1 :], congruencies[i + 1 :])
+        return output
