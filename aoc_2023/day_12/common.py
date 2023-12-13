@@ -19,11 +19,11 @@ class Day12Solver(ABC):
 
     @property
     def solution(self) -> int:
-        # return sum(RecordSolver(r).variations for r in self.records)
-        output = 0
-        for record in self.records:
-            output += len(list(self.get_variations(record.chars[:], record)))
-        return output
+        return sum(RecordSolver(r).variations for r in self.records)
+        # output = 0
+        # for record in self.records:
+        #     output += len(list(self.get_variations(record.chars[:], record)))
+        # return output
 
     @staticmethod
     def is_valid_sequence(seq: list[str], record: Record) -> bool:
@@ -86,24 +86,25 @@ class RecordSolver:
 
     @cached_property
     def variations(self) -> int:
-        return len(
-            list(
-                self.solve_it(
-                    char_index=0,
-                    run_length=0,
-                    congruencies_seen=0,
-                    start_stack=[-1],
-                )
-            )
+        # return len(
+        #     list(
+        return self.solve_it(
+            char_index=0,
+            run_length=0,
+            congruencies_seen=0,
+            start=-1,
         )
+
+    #     )
+    # )
 
     def solve_it(
         self,
         char_index: int,
         run_length: int,
         congruencies_seen: int,
-        start_stack: list[int],
-    ) -> Iterator[bool]:
+        start: int,
+    ) -> int:
         if char_index == len(self.record.chars):
             congruencies_left = len(self.record.congruencies) - congruencies_seen
             if (
@@ -111,10 +112,9 @@ class RecordSolver:
                 and congruencies_left == 1
                 and self.record.congruencies[-1] == run_length
             ):
-                yield True
+                return 1
             elif run_length == 0 and congruencies_left == 0:
-                yield True
-            return
+                return 1
         else:
             match self.record.chars[char_index]:
                 case ".":
@@ -122,24 +122,20 @@ class RecordSolver:
                         run_length
                         and run_length == self.record.congruencies[congruencies_seen]
                     ):
-                        start_stack.append(char_index)
-                        yield from self.solve_it(
+                        return self.solve_it(
                             char_index=char_index + 1,
                             run_length=0,
                             congruencies_seen=congruencies_seen + 1,
-                            start_stack=start_stack,
+                            start=char_index,
                         )
-                        start_stack.pop()
 
                     elif not run_length:
-                        start_stack.append(char_index)
-                        yield from self.solve_it(
+                        return self.solve_it(
                             char_index=char_index + 1,
                             run_length=0,
                             congruencies_seen=congruencies_seen,
-                            start_stack=start_stack,
+                            start=char_index,
                         )
-                        start_stack.pop()
                 case "#":
                     new_run_length = run_length + 1
                     if (
@@ -147,51 +143,50 @@ class RecordSolver:
                         and new_run_length
                         <= self.record.congruencies[congruencies_seen]
                     ):
-                        yield from self.solve_it(
+                        return self.solve_it(
                             char_index=char_index + 1,
                             run_length=new_run_length,
                             congruencies_seen=congruencies_seen,
-                            start_stack=start_stack,
+                            start=start,
                         )
 
                 case "?":
+                    variations = 0
                     new_run_length = run_length + 1
                     if (
                         congruencies_seen < len(self.record.congruencies)
                         and new_run_length
                         <= self.record.congruencies[congruencies_seen]
                     ):
-                        yield from self.solve_it(
+                        variations += self.solve_it(
                             char_index=char_index + 1,
                             run_length=new_run_length,
                             congruencies_seen=congruencies_seen,
-                            start_stack=start_stack,
+                            start=start,
                         )
 
                     if (
                         run_length
                         and run_length == self.record.congruencies[congruencies_seen]
                     ):
-                        start_stack.append(char_index)
-                        yield from self.solve_it(
+                        variations += self.solve_it(
                             char_index=char_index + 1,
                             run_length=0,
                             congruencies_seen=congruencies_seen + 1,
-                            start_stack=start_stack,
+                            start=char_index,
                         )
-                        start_stack.pop()
 
                     elif not run_length:
-                        start_stack.append(char_index)
-                        yield from self.solve_it(
+                        variations += self.solve_it(
                             char_index=char_index + 1,
                             run_length=0,
                             congruencies_seen=congruencies_seen,
-                            start_stack=start_stack,
+                            start=char_index,
                         )
-                        start_stack.pop()
+                    return variations
                 case _:
                     assert False
+        return 0
 
     # @cached_property
     # def variations(self) -> int:
