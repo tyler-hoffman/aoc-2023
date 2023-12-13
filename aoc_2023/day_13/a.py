@@ -1,4 +1,6 @@
 from dataclasses import dataclass
+from functools import cached_property
+from aoc_2023.day_13.common import MapSolver
 from aoc_2023.day_13.parser import Parser
 
 
@@ -8,7 +10,11 @@ class Day13PartASolver:
 
     @property
     def solution(self) -> int:
-        return -1
+        return sum(solver.score for solver in self.map_solvers)
+
+    @cached_property
+    def map_solvers(self) -> list[MapSolver]:
+        return [MapSolver(i, land_map) for i, land_map in enumerate(self.land_maps)]
 
 
 def solve(input: str) -> int:
