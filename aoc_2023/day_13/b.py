@@ -14,7 +14,7 @@ class Day13PartBSolver:
 
     @cached_property
     def map_solvers(self) -> list[MapSolver]:
-        return [MapSolver(i, land_map) for i, land_map in enumerate(self.land_maps)]
+        return [MapSolver(i, land_map, 1) for i, land_map in enumerate(self.land_maps)]
 
 
 def solve(input: str) -> int:
