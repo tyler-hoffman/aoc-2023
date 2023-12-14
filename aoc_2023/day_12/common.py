@@ -36,8 +36,8 @@ class RecordSolver:
             congruencies=self.record.congruencies[:],
         )
 
+    @staticmethod
     def solve_it(
-        self,
         chars: list[str],
         congruencies: list[int],
     ) -> int:
@@ -45,72 +45,102 @@ class RecordSolver:
             output = 1 if all(ch != "#" for ch in chars) else 0
             return output
         elif len(congruencies) == 1:
-            return self.congruency_matches("".join(chars), congruencies[0])
+            return RecordSolver.congruency_matches("".join(chars), congruencies[0])
         else:
             if len(chars) == 0:
                 return 0
             mid = len(chars) // 2
-            if chars[mid] == ".":
-                return self.split_as_period(chars, congruencies)
-            elif chars[mid] == "#":
-                return self.split_as_hash(chars, congruencies)
-            elif chars[mid] == "?":
-                return self.split_as_period(chars, congruencies) + self.split_as_hash(
-                    chars, congruencies
+            mid_char = chars[mid]
+            if mid_char == ".":
+                return RecordSolver.split_as_period(chars, congruencies)
+            elif mid_char == "#":
+                return RecordSolver.split_as_hash(chars, congruencies)
+            elif mid_char == "?":
+                return sum(
+                    [
+                        RecordSolver.split_as_period(chars, congruencies),
+                        RecordSolver.split_as_hash(chars, congruencies),
+                    ]
                 )
             else:
                 assert False
 
-    def congruency_matches(self, chars: str, congruency: int) -> int:
+    @staticmethod
+    def congruency_matches(chars: str, congruency: int) -> int:
+        if congruency == 0:
+            return 1 if "#" not in chars else 0
         groups = [g for g in period_pattern.split(chars) if g]
-        with_hashes = [g for g in groups if "#" in groups]
+        with_hashes = [g for g in groups if "#" in g]
         match len(with_hashes):
             case 0:
                 output = 0
                 for group in groups:
                     if len(group) >= congruency:
-                        return len(group) + 1 - congruency
+                        output += len(group) + 1 - congruency
                 return output
             case 1:
-                if len(with_hashes[0]) >= congruency:
-                    return len(with_hashes[0]) + 1 - congruency
-                else:
+                string = with_hashes[0]
+                hash_start = string.index("#")
+                hash_end = len(string) - string[::-1].index("#")
+                length = hash_end - hash_start
+                if length > congruency:
                     return 0
+                else:
+                    output = 0
+                    for start in range(1 + len(string) - congruency):
+                        end = start + congruency
+                        if start > hash_start:
+                            ...
+                        elif end < hash_end:
+                            ...
+                        else:
+                            output += 1
+                    return output
+
             case _:
                 return 0
 
-    def split_as_period(self, chars: list[str], congruencies: list[int]) -> int:
+    @staticmethod
+    def split_as_period(chars: list[str], congruencies: list[int]) -> int:
         mid = len(chars) // 2
-        assert mid != "#"
+        assert chars[mid] != "#"
         left_chars = chars[:mid]
         right_chars = chars[mid + 1 :]
         output = 0
         for i in range(len(congruencies)):
-            output += self.solve_it(left_chars, congruencies[:i]) * self.solve_it(
-                right_chars, congruencies[i:]
-            )
+            left = RecordSolver.solve_it(left_chars, congruencies[:i])
+            right = RecordSolver.solve_it(right_chars, congruencies[i:])
+            output += left * right
         return output
 
-    def split_as_hash(self, chars: list[str], congruencies: list[int]) -> int:
+    @staticmethod
+    def split_as_hash(chars: list[str], congruencies: list[int]) -> int:
         output = 0
         mid = len(chars) // 2
-        assert mid != "."
+        assert chars[mid] != "."
+        congruency_count = len(congruencies)
         output = 0
-        for i in range(len(congruencies)):
-            congruency = congruencies[i]
+        for c in range(congruency_count):
+            congruency = congruencies[c]
             for to_the_left in range(congruency):
-                to_the_right = congruency - to_the_left
                 left = mid - to_the_left
-                right = mid + to_the_right
-                if left >= 0 and right < len(chars):
-                    if "." in chars[left:right]:
-                        continue
-                    if left > 0 and chars[left - 1] == "#":
-                        continue
-                    if right < len(chars) and chars[right] == "#":
-                        continue
+                right = left + congruency
+                if left < 0:
+                    continue
+                if right > len(chars):
+                    continue
+                if "." in chars[left:right]:
+                    continue
+                if left > 0 and chars[left - 1] == "#":
+                    continue
+                if right < len(chars) and chars[right] == "#":
+                    continue
 
-                output += self.solve_it(
-                    chars[: max(0, left - 1)], congruencies[:i]
-                ) * self.solve_it(chars[right + 1 :], congruencies[i + 1 :])
+                left_count = RecordSolver.solve_it(
+                    chars[: max(0, left - 1)], congruencies[:c]
+                )
+                right_count = RecordSolver.solve_it(
+                    chars[right + 1 :], congruencies[c + 1 :]
+                )
+                output += left_count * right_count
         return output
