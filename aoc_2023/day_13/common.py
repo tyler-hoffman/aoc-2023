@@ -28,7 +28,9 @@ class MapSolver:
 
     def find_reflection_point(self, land_map: list[list[str]]) -> Optional[int]:
         for i in range(0, len(land_map) - 1):
-            if self.is_reflection_point(land_map, i):
+            if self.is_smudged_reflection_point(
+                land_map, i
+            ) and not self.is_reflection_point(land_map, i):
                 return i
         return None
 
@@ -46,6 +48,25 @@ class MapSolver:
                 return False
 
         return True
+
+    def is_smudged_reflection_point(
+        self, land_map: list[list[str]], point: int
+    ) -> Optional[int]:
+        diff_count = 0
+        for diff in range(len(land_map)):
+            y1 = point - diff
+            y2 = point + 1 + diff
+
+            if y1 < 0 or y2 >= len(land_map):
+                break
+
+            for x in range(len(land_map[0])):
+                if land_map[y1][x] != land_map[y2][x]:
+                    diff_count += 1
+                    if diff_count > 1:
+                        return False
+
+        return diff_count == 1
 
     @cached_property
     def transposed_land_map(self) -> list[list[str]]:
