@@ -9,22 +9,33 @@ class Day14PartASolver:
 
     @property
     def solution(self) -> int:
-        return sum(self.solve_col(x) for x in range(self.width))
+        panel = self.tilt_north(self.panel)
+        return self.count_north_load(panel)
 
-    def solve_col(self, x: int) -> int:
-        dest = 0
+    def count_north_load(self, panel: list[list[str]]) -> int:
         output = 0
-        for y in range(self.height):
-            match self.panel[y][x]:
-                case ".":
-                    ...
-                case "#":
-                    dest = y + 1
-                case "O":
-                    output += self.height - dest
-                    dest += 1
-                case _:
-                    assert False
+        for x in range(self.width):
+            for y in range(self.height):
+                if panel[y][x] == "O":
+                    output += self.height - y
+        return output
+
+    def tilt_north(self, panel: list[list[str]]) -> list[list[str]]:
+        output = [["." for _ in range(self.width)] for _ in range(self.height)]
+        for x in range(self.width):
+            dest = 0
+            for y in range(self.height):
+                match panel[y][x]:
+                    case ".":
+                        ...
+                    case "#":
+                        output[y][x] = "#"
+                        dest = y + 1
+                    case "O":
+                        output[dest][x] = "O"
+                        dest += 1
+                    case _:
+                        assert False
         return output
 
     @cached_property
