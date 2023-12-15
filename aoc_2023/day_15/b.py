@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from functools import cached_property
 from typing import Optional
+from aoc_2023.day_15.common import hash_it
 from aoc_2023.day_15.parser import Parser
 
 
@@ -80,7 +81,7 @@ class Day15PartBSolver:
         return output
 
     def do_operation(self, op: Minus | Equal) -> None:
-        box_id = self.hash(op.label)
+        box_id = hash_it(op.label)
         box = self.boxes[box_id]
 
         match op:
@@ -88,15 +89,6 @@ class Day15PartBSolver:
                 box.remove_lens(label)
             case Equal(label, val):
                 box.set_lens(label, val)
-
-    @staticmethod
-    def hash(line: str) -> int:
-        output = 0
-        for char in line:
-            output += ord(char)
-            output *= 17
-            output %= 256
-        return output
 
 
 def solve(input: str) -> int:

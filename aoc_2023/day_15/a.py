@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from aoc_2023.day_15.common import hash_it
 from aoc_2023.day_15.parser import Parser
 
 
@@ -8,16 +9,7 @@ class Day15PartASolver:
 
     @property
     def solution(self) -> int:
-        return sum(self.hash(line) for line in self.lines)
-
-    @staticmethod
-    def hash(line: str) -> int:
-        output = 0
-        for char in line:
-            output += ord(char)
-            output *= 17
-            output %= 256
-        return output
+        return sum(hash_it(line) for line in self.lines)
 
 
 def solve(input: str) -> int:
