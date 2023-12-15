@@ -8,11 +8,16 @@ class Day15PartASolver:
 
     @property
     def solution(self) -> int:
-        return -1
+        return sum(self.hash(line) for line in self.lines)
 
     @staticmethod
     def hash(line: str) -> int:
-        return -1
+        output = 0
+        for char in line:
+            output += ord(char)
+            output *= 17
+            output %= 256
+        return output
 
 
 def solve(input: str) -> int:
