@@ -10,9 +10,7 @@ class Day12PartASolver:
 
     @cached_property
     def solution(self) -> int:
-        return sum(
-            solve_it(tuple(r.chars), tuple(r.congruencies)) for r in self.records
-        )
+        return sum(solve_it(r.chars, tuple(r.congruencies)) for r in self.records)
 
     @cached_property
     def records(self) -> list[Record]:

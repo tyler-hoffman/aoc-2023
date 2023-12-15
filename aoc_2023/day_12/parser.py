@@ -11,5 +11,5 @@ class Parser:
     def parse_line(line: str) -> Record:
         chars, congruencies = line.split()
         return Record(
-            chars=list(chars), congruencies=[int(x) for x in congruencies.split(",")]
+            chars=chars, congruencies=[int(x) for x in congruencies.split(",")]
         )

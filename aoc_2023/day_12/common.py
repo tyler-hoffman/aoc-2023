@@ -5,7 +5,7 @@ from functools import cache
 
 @dataclass(frozen=True)
 class Record:
-    chars: list[str]
+    chars: str
     congruencies: list[int]
 
 
@@ -14,7 +14,7 @@ PERIOD_PATTERN = re.compile(r"\.+")
 
 @cache
 def solve_it(
-    chars: tuple[str, ...],
+    chars: str,
     congruencies: tuple[int, ...],
 ) -> int:
     if len(congruencies) == 0:
@@ -43,7 +43,7 @@ def solve_it(
 
 
 @cache
-def congruency_matches(chars: tuple[str, ...], congruency: int) -> int:
+def congruency_matches(chars: str, congruency: int) -> int:
     full_string = "".join(chars)
     if congruency == 0:
         return 1 if "#" not in chars else 0
@@ -79,7 +79,7 @@ def congruency_matches(chars: tuple[str, ...], congruency: int) -> int:
             return 0
 
 
-def split_as_period(chars: tuple[str, ...], congruencies: tuple[int, ...]) -> int:
+def split_as_period(chars: str, congruencies: tuple[int, ...]) -> int:
     mid = len(chars) // 2
     assert chars[mid] != "#"
     left_chars = chars[:mid]
@@ -92,7 +92,7 @@ def split_as_period(chars: tuple[str, ...], congruencies: tuple[int, ...]) -> in
     return output
 
 
-def split_as_hash(chars: tuple[str, ...], congruencies: tuple[int, ...]) -> int:
+def split_as_hash(chars: str, congruencies: tuple[int, ...]) -> int:
     output = 0
     mid = len(chars) // 2
     assert chars[mid] != "."

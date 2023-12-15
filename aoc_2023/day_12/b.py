@@ -10,23 +10,17 @@ class Day12PartBSolver:
 
     @cached_property
     def solution(self) -> int:
-        return sum(
-            solve_it(tuple(r.chars), tuple(r.congruencies)) for r in self.records
-        )
+        return sum(solve_it(r.chars, tuple(r.congruencies)) for r in self.records)
 
     @cached_property
     def records(self) -> list[Record]:
-        output = list[Record]()
-        for record in self.original_records:
-            chars = list[str]()
-            congruencies = list[int]()
-            for _ in range(5):
-                chars.extend(record.chars)
-                chars.append("?")
-                congruencies.extend(record.congruencies)
-            chars.pop()
-            output.append(Record(chars, congruencies))
-        return output
+        return [
+            Record(
+                chars="?".join([original.chars] * 5),
+                congruencies=original.congruencies * 5,
+            )
+            for original in self.original_records
+        ]
 
 
 def solve(input: str) -> int:
