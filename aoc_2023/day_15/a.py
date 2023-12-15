@@ -13,7 +13,7 @@ class Day15PartASolver:
 
 
 def solve(input: str) -> int:
-    data = Parser.parse(input)
+    data = Parser.parse_lines(input)
     solver = Day15PartASolver(data)
 
     return solver.solution

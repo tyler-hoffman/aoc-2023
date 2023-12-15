@@ -1,19 +1,7 @@
 from dataclasses import dataclass, field
 from functools import cached_property
-from typing import Optional
-from aoc_2023.day_15.common import hash_it
+from aoc_2023.day_15.common import Equal, Minus, hash_it
 from aoc_2023.day_15.parser import Parser
-
-
-@dataclass
-class Minus:
-    label: str
-
-
-@dataclass
-class Equal:
-    label: str
-    val: int
 
 
 @dataclass
@@ -26,14 +14,14 @@ class Lens:
 @dataclass(frozen=True)
 class Box:
     id: int
-    lenses: list[Optional[Lens]] = field(hash=False, default_factory=list)
+    lenses: list[Lens] = field(hash=False, default_factory=list)
     lens_index_lookup: dict[str, Lens] = field(hash=False, default_factory=dict)
 
     @property
     def focusing_power(self) -> int:
         output = 0
         box_num = self.id + 1
-        lenses = [lens for lens in self.lenses if lens and not lens.deleted]
+        lenses = [lens for lens in self.lenses if not lens.deleted]
         for i, lens in enumerate(lenses):
             lens_num = i + 1
             output += box_num * lens_num * lens.focus_length
@@ -57,7 +45,7 @@ class Box:
 
 @dataclass
 class Day15PartBSolver:
-    lines: list[str]
+    operations: list[Equal | Minus]
 
     @property
     def solution(self) -> int:
@@ -68,17 +56,6 @@ class Day15PartBSolver:
     @cached_property
     def boxes(self) -> list[Box]:
         return [Box(i, []) for i in range(256)]
-
-    @cached_property
-    def operations(self) -> list[Minus | Equal]:
-        output = list[Minus | Equal]()
-        for line in self.lines:
-            if line[-1] == "-":
-                output.append(Minus(line[:-1]))
-            else:
-                label, val = line.split("=")
-                output.append(Equal(label, int(val)))
-        return output
 
     def do_operation(self, op: Minus | Equal) -> None:
         box_id = hash_it(op.label)
@@ -92,8 +69,8 @@ class Day15PartBSolver:
 
 
 def solve(input: str) -> int:
-    data = Parser.parse(input)
-    solver = Day15PartBSolver(data)
+    operations = Parser.parse_operations(input)
+    solver = Day15PartBSolver(operations)
 
     return solver.solution
 
