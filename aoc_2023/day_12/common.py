@@ -9,7 +9,7 @@ class Record:
     congruencies: list[int]
 
 
-period_pattern = re.compile(r"\.+")
+PERIOD_PATTERN = re.compile(r"\.+")
 
 
 @cache
@@ -21,7 +21,7 @@ def solve_it(
         output = 1 if all(ch != "#" for ch in chars) else 0
         return output
     elif len(congruencies) == 1:
-        return congruency_matches("".join(chars), congruencies[0])
+        return congruency_matches(chars, congruencies[0])
     else:
         if len(chars) == 0:
             return 0
@@ -42,10 +42,12 @@ def solve_it(
             assert False
 
 
-def congruency_matches(chars: str, congruency: int) -> int:
+@cache
+def congruency_matches(chars: tuple[str, ...], congruency: int) -> int:
+    full_string = "".join(chars)
     if congruency == 0:
         return 1 if "#" not in chars else 0
-    groups = [g for g in period_pattern.split(chars) if g]
+    groups = [g for g in PERIOD_PATTERN.split(full_string) if g]
     with_hashes = [g for g in groups if "#" in g]
     match len(with_hashes):
         case 0:
