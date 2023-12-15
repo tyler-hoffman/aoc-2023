@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 import re
-from abc import ABC, abstractmethod
 from functools import cache
 
 
@@ -11,24 +10,6 @@ class Record:
 
 
 period_pattern = re.compile(r"\.+")
-
-
-@dataclass(frozen=True)
-class Day12Solver(ABC):
-    @property
-    @abstractmethod
-    def records(self) -> list[Record]:
-        ...
-
-    @property
-    def solution(self) -> int:
-        output = 0
-        for record in self.records:
-            output += solve_it(
-                chars=tuple(record.chars[:]),
-                congruencies=tuple(record.congruencies[:]),
-            )
-        return output
 
 
 @cache

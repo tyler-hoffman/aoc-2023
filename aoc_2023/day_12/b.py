@@ -1,12 +1,18 @@
 from dataclasses import dataclass
 from functools import cached_property
-from aoc_2023.day_12.common import Day12Solver, Record
+from aoc_2023.day_12.common import Record, solve_it
 from aoc_2023.day_12.parser import Parser
 
 
 @dataclass(frozen=True)
-class Day12PartBSolver(Day12Solver):
+class Day12PartBSolver:
     original_records: list[Record]
+
+    @cached_property
+    def solution(self) -> int:
+        return sum(
+            solve_it(tuple(r.chars), tuple(r.congruencies)) for r in self.records
+        )
 
     @cached_property
     def records(self) -> list[Record]:
