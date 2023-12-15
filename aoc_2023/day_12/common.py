@@ -107,7 +107,7 @@ class RecordSolver:
         left_chars = chars[:mid]
         right_chars = chars[mid + 1 :]
         output = 0
-        for i in range(len(congruencies)):
+        for i in range(len(congruencies) + 1):
             left = RecordSolver.solve_it(left_chars, congruencies[:i])
             right = RecordSolver.solve_it(right_chars, congruencies[i:])
             output += left * right
