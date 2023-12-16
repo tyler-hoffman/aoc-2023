@@ -1,26 +1,19 @@
 from dataclasses import dataclass
-from functools import cached_property
-from aoc_2023.day_16.common import RIGHT, Beam, Grid
 from aoc_2023.day_16.parser import Parser
-from aoc_2023.tools.point import Point
 
 
 @dataclass
-class Day16PartASolver:
-    chars: list[str]
+class Day16PartBSolver:
+    input: str
 
     @property
     def solution(self) -> int:
-        return self.grid.get_energized(Beam(Point(0, 0), RIGHT))
-
-    @cached_property
-    def grid(self) -> Grid:
-        return Grid(self.chars)
+        return -1
 
 
 def solve(input: str) -> int:
     data = Parser.parse(input)
-    solver = Day16PartASolver(data)
+    solver = Day16PartBSolver(data)
 
     return solver.solution
 
