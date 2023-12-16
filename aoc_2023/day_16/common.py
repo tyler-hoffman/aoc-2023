@@ -41,51 +41,52 @@ class Grid:
             beam = to_check.pop()
             energized.add(beam.pos)
 
-            tile = self.chars[beam.pos.y][beam.pos.x]
-            next_beams = list[Beam]()
-            match tile:
-                case ".":
-                    next_beams.append(beam.move())
-                case "|":
-                    if beam.direction in {LEFT, RIGHT}:
-                        next_beams.append(beam.move(UP))
-                        next_beams.append(beam.move(DOWN))
-                    else:
-                        next_beams.append(beam.move())
-                case "-":
-                    if beam.direction in {UP, DOWN}:
-                        next_beams.append(beam.move(LEFT))
-                        next_beams.append(beam.move(RIGHT))
-                    else:
-                        next_beams.append(beam.move())
-                case "/":
-                    if beam.direction == RIGHT:
-                        next_beams.append(beam.move(UP))
-                    elif beam.direction == LEFT:
-                        next_beams.append(beam.move(DOWN))
-                    elif beam.direction == UP:
-                        next_beams.append(beam.move(RIGHT))
-                    else:
-                        next_beams.append(beam.move(LEFT))
-                case "\\":
-                    if beam.direction == RIGHT:
-                        next_beams.append(beam.move(DOWN))
-                    elif beam.direction == LEFT:
-                        next_beams.append(beam.move(UP))
-                    elif beam.direction == UP:
-                        next_beams.append(beam.move(LEFT))
-                    else:
-                        next_beams.append(beam.move(RIGHT))
-                case _:
-                    assert False
             next_beams = [
-                b for b in next_beams if b not in seen and self.contains(b.pos)
+                b
+                for b in self.next_beams(beam)
+                if b not in seen and self.contains(b.pos)
             ]
             for b in next_beams:
                 to_check.append(b)
                 seen.add(b)
 
         return len(energized)
+
+    def next_beams(self, beam: Beam) -> set[Beam]:
+        tile = self.chars[beam.pos.y][beam.pos.x]
+        match tile:
+            case ".":
+                return {beam.move()}
+            case "|":
+                if beam.direction in {LEFT, RIGHT}:
+                    return {beam.move(UP), beam.move(DOWN)}
+                else:
+                    return {beam.move()}
+            case "-":
+                if beam.direction in {UP, DOWN}:
+                    return {beam.move(LEFT), beam.move(RIGHT)}
+                else:
+                    return {beam.move()}
+            case "/":
+                if beam.direction == RIGHT:
+                    return {beam.move(UP)}
+                elif beam.direction == LEFT:
+                    return {beam.move(DOWN)}
+                elif beam.direction == UP:
+                    return {beam.move(RIGHT)}
+                else:
+                    return {beam.move(LEFT)}
+            case "\\":
+                if beam.direction == RIGHT:
+                    return {beam.move(DOWN)}
+                elif beam.direction == LEFT:
+                    return {beam.move(UP)}
+                elif beam.direction == UP:
+                    return {beam.move(LEFT)}
+                else:
+                    return {beam.move(RIGHT)}
+            case _:
+                assert False
 
 
 @dataclass(frozen=True)
