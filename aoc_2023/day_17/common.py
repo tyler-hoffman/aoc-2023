@@ -56,7 +56,7 @@ class Day17Solver:
 
     @property
     def solution(self) -> int:
-        seen = set[tuple[Point, Point]]()
+        best_seen = dict[tuple[Point, bool], int]()
         queue = PriorityQueue[tuple[int, State]]()
         queue.put((self.goal.dist(self.start), State(self.start, 0, None)))
         while True:
@@ -80,13 +80,16 @@ class Day17Solver:
                     if i < self.min_move:
                         continue
 
-                    seen_key = (state.pos, p)
-                    if (seen_key) in seen:
-                        continue
                     dist_to_goal = p.dist(self.goal)
                     new_cost = new_total_heat_loss + dist_to_goal
 
-                    seen.add(seen_key)
+                    best_seen_key = (p, direction in {UP, DOWN})
+                    if (
+                        best_seen_key in best_seen
+                        and best_seen[best_seen_key] <= new_cost
+                    ):
+                        continue
+                    best_seen[best_seen_key] = new_cost
                     queue.put((new_cost, State(p, new_total_heat_loss, state)))
 
     @cached_property
