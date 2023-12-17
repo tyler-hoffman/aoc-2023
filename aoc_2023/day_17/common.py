@@ -65,6 +65,9 @@ class Day17Solver:
                 assert cost == state.total_heat_loss
                 return state.total_heat_loss
 
+            if cost > best_seen.get(self.create_key(state), float("inf")):
+                continue
+
             for direction in DIRECTIONS:
                 if direction == state.last_direction:
                     continue
@@ -83,14 +86,14 @@ class Day17Solver:
                     dist_to_goal = p.dist(self.goal)
                     new_cost = new_total_heat_loss + dist_to_goal
 
-                    best_seen_key = (p, direction in {UP, DOWN})
-                    if (
-                        best_seen_key in best_seen
-                        and best_seen[best_seen_key] <= new_cost
-                    ):
-                        continue
-                    best_seen[best_seen_key] = new_cost
-                    queue.put((new_cost, State(p, new_total_heat_loss, state)))
+                    new_state = State(p, new_total_heat_loss, state)
+                    best_seen_key = self.create_key(new_state)
+                    if new_cost < best_seen.get(best_seen_key, float("inf")):
+                        best_seen[best_seen_key] = new_cost
+                        queue.put((new_cost, State(p, new_total_heat_loss, state)))
+
+    def create_key(self, state: State) -> tuple[Point, bool]:
+        return (state.pos, state.last_direction in {UP, DOWN})
 
     @cached_property
     def start(self) -> Point:
