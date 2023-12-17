@@ -17,6 +17,12 @@ class Point:
     def add(self, other: Point) -> Point:
         return Point(self.x + other.x, self.y + other.y)
 
+    def subtract(self, other: Point) -> Point:
+        return Point(self.x - other.x, self.y - other.y)
+
+    def multiply(self, amt: int) -> Point:
+        return Point(self.x * amt, self.y * amt)
+
     def dist(self, other: Point) -> int:
         return abs(self.x - other.x) + abs(self.y - other.y)
 
