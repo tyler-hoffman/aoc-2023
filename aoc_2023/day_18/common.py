@@ -57,7 +57,8 @@ class Solver:
                     terminals.add(end_segment)
 
         output += self.left_len
-        return output + 1
+        output += 1
+        return output
 
     @cached_property
     def xs(self) -> list[int]:
