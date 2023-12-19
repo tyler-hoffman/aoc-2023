@@ -3,7 +3,7 @@ from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(frozen=True)
 class Part:
     x: int
     m: int
@@ -13,6 +13,10 @@ class Part:
     def val(self, field: str) -> int:
         return getattr(self, field)
 
+    @property
+    def score(self) -> int:
+        return sum([self.x, self.m, self.a, self.s])
+
 
 @dataclass
 class Workflow:
@@ -20,7 +24,10 @@ class Workflow:
     rules: list[Predicate]
 
 
+@dataclass
 class Predicate(metaclass=ABCMeta):
+    dest: str
+
     @abstractmethod
     def matches(self, part: Part) -> bool:
         ...
